@@ -402,7 +402,7 @@
   <div class="screen navy-screen active" id="screen-intro">
     <span class="badge">Diagnostic &middot; Leadership Series</span>
     <h1 class="hero" style="margin-top:28px;">The Leadership<br><span class="gold">Blindspots</span> Scorecard</h1>
-    <p class="hero-sub">A short diagnostic for leaders who assume they're supporting their team &mdash; and may be building ceilings without realizing it.</p>
+    <p class="hero-sub">A short diagnostic for leaders who assume they're supporting their team, and may be building ceilings without realizing it.</p>
     <div class="meta-line"><b>5 minutes</b> &middot; <b>20 questions</b> &middot; your result at the end</div>
     <button class="btn-gold" id="btnStart">Start the Diagnostic &rarr;</button>
     <div class="footer-note">FROM THE MAKER OF <b>BREAKING INVISIBLE CEILINGS</b> &middot; ASHAR SALEEM</div>
@@ -425,7 +425,7 @@
     <div class="email-icon-line"></div>
     <div class="q-kicker">One last thing</div>
     <h2 class="q-title">Where should we send your results?</h2>
-    <p style="font-size:14.5px; color:var(--muted); line-height:1.55; max-width:440px;">Your archetype and full breakdown are ready &mdash; enter your email to see them.</p>
+    <p style="font-size:14.5px; color:var(--muted); line-height:1.55; max-width:440px;">Your archetype and full breakdown are ready. Enter your email to see them.</p>
     <form id="emailForm">
       <input type="email" id="emailInput" placeholder="you@company.com" required autocomplete="email">
       <div class="form-error" id="emailError">Enter a valid email to continue.</div>
@@ -446,8 +446,8 @@
     <p class="archetype-desc" id="archetypeDesc"></p>
 
     <div class="cta-box">
-      <h3>Break Your Invisible Ceiling &mdash; for Your Team</h3>
-      <p>A corporate workshop built around this exact framework &mdash; helping leaders and their teams name what's holding people back and build habits that keep ceilings from reappearing.</p>
+      <h3>Break Your Invisible Ceiling: For Your Team</h3>
+      <p>A corporate workshop built around this exact framework, helping leaders and their teams name what's holding people back and build habits that keep ceilings from reappearing.</p>
       <button class="btn-gold" id="btnCta" style="padding:12px 22px; font-size:13.5px;">Book a Conversation &rarr;</button>
     </div>
 
@@ -466,10 +466,10 @@
     {
       key: "visibility",
       title: "Visibility & Credit",
-      kicker: "Who gets seen on your team \u2014 and who doesn't",
+      kicker: "Who gets seen on your team, and who doesn't",
       statements: [
         "I notice quiet, consistent performers as quickly as I notice loud, visible ones.",
-        "I give credit by name, in front of others \u2014 not just in private.",
+        "I give credit by name, in front of others, not just in private.",
         "I can name what each person on my team is working on right now, without checking.",
         "When something goes well, I make sure the person who did the work gets asked to present it."
       ]
@@ -479,10 +479,10 @@
       title: "Feedback & Growth",
       kicker: "What you actually say vs. what people actually need to hear",
       statements: [
-        "I give specific, direct feedback \u2014 not just \u201cgood job\u201d or \u201ckeep it up.\u201d",
+        "I give specific, direct feedback, not just \u201cgood job\u201d or \u201ckeep it up.\u201d",
         "I tell people what's holding them back before it shows up in a review.",
         "I ask people what growth looks like for them, rather than assuming I know.",
-        "My feedback changes behavior \u2014 not just gets acknowledged and forgotten."
+        "My feedback changes behavior, not just gets acknowledged and forgotten."
       ]
     },
     {
@@ -521,10 +521,10 @@
   ];
 
   var ARCHETYPES = [
-    { min: 85, max: 100, title: "The Ceiling Breaker", desc: "You're actively building an environment where people are seen, stretched, and trusted. Keep pressure-testing it \u2014 the risk at this level is assuming it will hold itself." },
-    { min: 65, max: 84, title: "The Blind Advocate", desc: "You believe you're supportive, and mostly you are \u2014 but there are specific gaps where your good intentions aren't reaching certain people on your team." },
-    { min: 45, max: 64, title: "The Firefighter", desc: "You're reactive by necessity, not by nature. Day-to-day fires are eating the time that would otherwise go to developing people \u2014 and they've noticed." },
-    { min: 0, max: 44, title: "The Silent Enabler", desc: "Without meaning to, your team has learned that being quiet and compliant is safer than being visible and vocal. That's a ceiling \u2014 and it's one you can move." }
+    { min: 85, max: 100, title: "The Ceiling Breaker", desc: "You're actively building an environment where people are seen, stretched, and trusted. Keep pressure-testing it. The risk at this level is assuming it will hold itself." },
+    { min: 65, max: 84, title: "The Blind Advocate", desc: "You believe you're supportive, and mostly you are, but there are specific gaps where your good intentions aren't reaching certain people on your team." },
+    { min: 45, max: 64, title: "The Firefighter", desc: "You're reactive by necessity, not by nature. Day-to-day fires are eating the time that would otherwise go to developing people, and they've noticed." },
+    { min: 0, max: 44, title: "The Silent Enabler", desc: "Without meaning to, your team has learned that being quiet and compliant is safer than being visible and vocal. That's a ceiling, and it's one you can move." }
   ];
 
   var answers = SECTIONS.map(function (s) { return new Array(s.statements.length).fill(null); });
