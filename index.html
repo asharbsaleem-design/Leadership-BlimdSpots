@@ -351,6 +351,35 @@
     margin-bottom: 30px;
   }
 
+  .breakdown-box {
+    margin-bottom: 28px;
+  }
+  .breakdown-row {
+    padding: 16px 0;
+    border-top: 1px solid #364569;
+  }
+  .breakdown-row.action-row {
+    border-bottom: 1px solid #364569;
+  }
+  .breakdown-label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .breakdown-label.strength { color: #8fd4b0; }
+  .breakdown-label.blindspot { color: #e0a45f; }
+  .breakdown-label.action { color: var(--gold); }
+  .breakdown-text {
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: #dfe2ea;
+    margin: 0;
+    max-width: 470px;
+  }
+
   .cta-box {
     border: 1.5px solid var(--gold);
     padding: 22px 24px;
@@ -445,6 +474,21 @@
     <h1 class="archetype-title" id="archetypeTitle"></h1>
     <p class="archetype-desc" id="archetypeDesc"></p>
 
+    <div class="breakdown-box" id="breakdownBox">
+      <div class="breakdown-row">
+        <span class="breakdown-label strength">Your strongest area: <span id="strengthSection"></span></span>
+        <p class="breakdown-text" id="strengthText"></p>
+      </div>
+      <div class="breakdown-row">
+        <span class="breakdown-label blindspot">Your blindspot: <span id="blindspotSection"></span></span>
+        <p class="breakdown-text" id="blindspotText"></p>
+      </div>
+      <div class="breakdown-row action-row">
+        <span class="breakdown-label action">Try this week</span>
+        <p class="breakdown-text" id="actionText"></p>
+      </div>
+    </div>
+
     <div class="cta-box">
       <h3>Break Your Invisible Ceiling: For Your Team</h3>
       <p>A corporate workshop built around this exact framework, helping leaders and their teams name what's holding people back and build habits that keep ceilings from reappearing.</p>
@@ -521,11 +565,44 @@
   ];
 
   var ARCHETYPES = [
-    { min: 85, max: 100, title: "The Ceiling Breaker", desc: "You're actively building an environment where people are seen, stretched, and trusted. Keep pressure-testing it. The risk at this level is assuming it will hold itself." },
-    { min: 65, max: 84, title: "The Blind Advocate", desc: "You believe you're supportive, and mostly you are, but there are specific gaps where your good intentions aren't reaching certain people on your team." },
-    { min: 45, max: 64, title: "The Firefighter", desc: "You're reactive by necessity, not by nature. Day-to-day fires are eating the time that would otherwise go to developing people, and they've noticed." },
-    { min: 0, max: 44, title: "The Silent Enabler", desc: "Without meaning to, your team has learned that being quiet and compliant is safer than being visible and vocal. That's a ceiling, and it's one you can move." }
+    { min: 85, max: 100, title: "The Ceiling Breaker", desc: "You're actively building an environment where people are seen, stretched, and trusted." },
+    { min: 65, max: 84, title: "The Blind Advocate", desc: "You believe you're supportive, and mostly you are, but there are specific gaps where your good intentions aren't reaching everyone." },
+    { min: 45, max: 64, title: "The Firefighter", desc: "You're reactive by necessity, not by nature, and it's costing you time you'd rather spend developing people." },
+    { min: 0, max: 44, title: "The Silent Enabler", desc: "Without meaning to, your team has learned that staying quiet and compliant feels safer than being visible and vocal." }
   ];
+
+  var SECTION_COPY = {
+    visibility: {
+      label: "Visibility & Credit",
+      strength: "you make sure people get seen and credited for their work.",
+      blindspot: "quiet performers on your team are likely going unnoticed, doing strong work that never gets named out loud.",
+      action: "Name one person's specific contribution out loud, in a meeting, not just in a private message."
+    },
+    feedback: {
+      label: "Feedback & Growth",
+      strength: "you give feedback specific enough to actually change behavior.",
+      blindspot: "your feedback probably stays vague. People know they're \u201cdoing fine\u201d but not what's actually holding them back.",
+      action: "Give one person feedback specific enough that they could act on it today, not just \u201ckeep it up.\u201d"
+    },
+    delegation: {
+      label: "Delegation & Trust",
+      strength: "you hand over real ownership, not just tasks.",
+      blindspot: "you're likely still the bottleneck. Decisions route through you more than they need to.",
+      action: "Hand one real decision to someone else and let them make it without checking with you first."
+    },
+    access: {
+      label: "Access & Opportunity",
+      strength: "opportunity on your team doesn't just go to whoever's loudest.",
+      blindspot: "opportunity probably goes to whoever's already visible, not necessarily whoever's ready.",
+      action: "Give one stretch assignment or introduction to someone who wouldn't normally get it."
+    },
+    environment: {
+      label: "Environment & Standards",
+      strength: "your team feels safe pushing back and raising problems.",
+      blindspot: "your team likely feels safer staying quiet than pushing back, even when something's wrong.",
+      action: "Ask someone junior what they'd do differently, and visibly act on part of their answer."
+    }
+  };
 
   var answers = SECTIONS.map(function (s) { return new Array(s.statements.length).fill(null); });
   var currentSection = 0;
@@ -647,10 +724,12 @@
 
   function computeScore() {
     var total = 0;
-    answers.forEach(function (section) {
-      section.forEach(function (v) { total += v; });
+    var sectionTotals = SECTIONS.map(function (section, idx) {
+      var sTotal = answers[idx].reduce(function (sum, v) { return sum + v; }, 0);
+      total += sTotal;
+      return { key: section.key, label: section.title, total: sTotal };
     });
-    return total;
+    return { total: total, sectionTotals: sectionTotals };
   }
 
   function getArchetype(score) {
@@ -660,15 +739,31 @@
     return ARCHETYPES[ARCHETYPES.length - 1];
   }
 
-  function submitLead(email, score, archetypeTitle) {
+  function getBreakdown(sectionTotals) {
+    var strongest = sectionTotals[0];
+    var weakest = sectionTotals[0];
+    sectionTotals.forEach(function (s) {
+      if (s.total > strongest.total) strongest = s;
+      if (s.total < weakest.total) weakest = s;
+    });
+    if (strongest.key === weakest.key) return null;
+    return { strongest: strongest, weakest: weakest };
+  }
+
+  function submitLead(email, score, archetypeTitle, breakdown) {
     if (!LEAD_ENDPOINT) return Promise.resolve();
+    var payload = { email: email, score: score, archetype: archetypeTitle, source: "leadership-blindspots-scorecard" };
+    if (breakdown) {
+      payload.strongest_area = breakdown.strongest.label;
+      payload.weakest_area = breakdown.weakest.label;
+    }
     return fetch(LEAD_ENDPOINT, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Accept": "application/json"
       },
-      body: JSON.stringify({ email: email, score: score, archetype: archetypeTitle, source: "leadership-blindspots-scorecard" })
+      body: JSON.stringify(payload)
     }).catch(function () {});
   }
 
@@ -685,18 +780,34 @@
     }
     error.classList.remove("show");
 
-    var score = computeScore();
-    var archetype = getArchetype(score);
+    var result = computeScore();
+    var archetype = getArchetype(result.total);
+    var breakdown = getBreakdown(result.sectionTotals);
 
-    submitLead(email, score, archetype.title).then(function () {
-      showResults(score, archetype);
+    submitLead(email, result.total, archetype.title, breakdown).then(function () {
+      showResults(result.total, archetype, breakdown);
     });
   });
 
-  function showResults(score, archetype) {
+  function showResults(score, archetype, breakdown) {
     document.getElementById("scoreOut").textContent = score;
     document.getElementById("archetypeTitle").textContent = archetype.title;
     document.getElementById("archetypeDesc").textContent = archetype.desc;
+
+    var box = document.getElementById("breakdownBox");
+    if (breakdown) {
+      box.style.display = "";
+      var strengthCopy = SECTION_COPY[breakdown.strongest.key];
+      var blindspotCopy = SECTION_COPY[breakdown.weakest.key];
+      document.getElementById("strengthSection").textContent = strengthCopy.label;
+      document.getElementById("strengthText").textContent = "You're strong here: " + strengthCopy.strength;
+      document.getElementById("blindspotSection").textContent = blindspotCopy.label;
+      document.getElementById("blindspotText").textContent = "Right now, " + blindspotCopy.blindspot;
+      document.getElementById("actionText").textContent = blindspotCopy.action;
+    } else {
+      box.style.display = "none";
+    }
+
     showScreen("results");
     requestAnimationFrame(function () {
       setTimeout(function () {
